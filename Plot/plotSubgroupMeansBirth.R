@@ -183,65 +183,6 @@ ggplot(means, aes(x = YEAR, y = meanBirthRate, group = treat, colour = treat)) +
   theme(legend.position = "bottom")
 
 
-# Add function to put legend in empty facet cell --------------------------
-shift_legend <- function(p){
-  
-  # check if p is a valid object
-  if(!"gtable" %in% class(p)){
-    if("ggplot" %in% class(p)){
-      gp <- ggplotGrob(p) # convert to grob
-    } else {
-      message("This is neither a ggplot object nor a grob generated from ggplotGrob. Returning original plot.")
-      return(p)
-    }
-  } else {
-    gp <- p
-  }
-  
-  # check for unfilled facet panels
-  facet.panels <- grep("^panel", gp[["layout"]][["name"]])
-  empty.facet.panels <- sapply(facet.panels, function(i) "zeroGrob" %in% class(gp[["grobs"]][[i]]))
-  empty.facet.panels <- facet.panels[empty.facet.panels]
-  if(length(empty.facet.panels) == 0){
-    message("There are no unfilled facet panels to shift legend into. Returning original plot.")
-    return(p)
-  }
-  
-  # establish extent of unfilled facet panels (including any axis cells in between)
-  empty.facet.panels <- gp[["layout"]][empty.facet.panels, ]
-  empty.facet.panels <- list(min(empty.facet.panels[["t"]]), min(empty.facet.panels[["l"]]),
-                             max(empty.facet.panels[["b"]]), max(empty.facet.panels[["r"]]))
-  names(empty.facet.panels) <- c("t", "l", "b", "r")
-  
-  # extract legend & copy over to location of unfilled facet panels
-  guide.grob <- which(gp[["layout"]][["name"]] == "guide-box")
-  if(length(guide.grob) == 0){
-    message("There is no legend present. Returning original plot.")
-    return(p)
-  }
-  gp <- gtable_add_grob(x = gp,
-                        grobs = gp[["grobs"]][[guide.grob]],
-                        t = empty.facet.panels[["t"]],
-                        l = empty.facet.panels[["l"]],
-                        b = empty.facet.panels[["b"]],
-                        r = empty.facet.panels[["r"]],
-                        name = "new-guide-box")
-  
-  # squash the original guide box's row / column (whichever applicable)
-  # & empty its cell
-  guide.grob <- gp[["layout"]][guide.grob, ]
-  if(guide.grob[["l"]] == guide.grob[["r"]]){
-    gp <- gtable_squash_cols(gp, cols = guide.grob[["l"]])
-  }
-  if(guide.grob[["t"]] == guide.grob[["b"]]){
-    gp <- gtable_squash_rows(gp, rows = guide.grob[["t"]])
-  }
-  gp <- gtable_remove_grobs(gp, "guide-box")
-  
-  return(gp)
-}
-
-
 # Compute and plot by cohort ----------------------------------------------
 cohortMeans <- birthRates %>%
   mutate(YEARCAPPED = case_when(
@@ -252,13 +193,13 @@ cohortMeans <- birthRates %>%
   mutate(YEARCAPPED = as.factor(YEARCAPPED))
 
 fig <- ggplot(data = cohortMeans, aes(x = YEAR, y = meanBirthRate, group = YEARCAPPED)) +
-  geom_point(aes(colour = YEARCAPPED), alpha = 0.7) +
-  scale_colour_manual(values = c("#8dd3c7", "lightgoldenrod2", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5")) +
-  labs(colour = "Cohort") +
-  new_scale_color()+
-  geom_line(data = means, aes(x = YEAR, y = meanBirthRate, group = treat, colour = treat), size = 1) +
+  geom_line(data = means, aes(x = YEAR, y = meanBirthRate, group = treat, colour = treat), linewidth = 0.5) +
   scale_colour_manual(values = c("blue", "red"), labels = c("Untreated states", "Treated states")) +
   labs(colour = "") +
+  new_scale_color()+
+  geom_point(aes(colour = YEARCAPPED), alpha = 0.7, size = 0.8) +
+  scale_colour_manual(values = c("#8dd3c7", "lightgoldenrod2", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "black")) +
+  labs(colour = "Cohort") +
   facet_wrap(~type, scales = "free", nrow = 3, ncol = 2) +
   labs(y = "Births per 1000 women", x = "Year") +
   scale_x_continuous(breaks = seq(1982, 2010, 4), labels = seq(1982, 2010, 4)) +
@@ -266,8 +207,9 @@ fig <- ggplot(data = cohortMeans, aes(x = YEAR, y = meanBirthRate, group = YEARC
   theme_bw() +
   theme(legend.box = "horizontal",
         panel.grid.minor.x = element_blank(),
-        panel.grid.major.x = element_blank())
+        panel.grid.major.x = element_blank(),
+        legend.position = c(1, 0),
+        legend.justification = c(1 ,0),
+        plot.margin = margin(0.25, 0.5, 0.25, 0.5, "cm"))
 
-grid.draw(shift_legend(fig))
-
-#ggsave("Output/Figures/subgroupMeans.png", groupMeans, width = 6, height = 9)
+ggsave("Output/Figures/subgroupMeansBirth.png", fig, width = 7, height = 8)

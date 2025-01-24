@@ -140,4 +140,4 @@ meanEmpl <- ggplot(means, aes(x = YEAR, y = mean, group = TREAT, colour = TREAT)
 
 unweighted <- (meanBirth + meanEmpl) / (diffBirth + diffEmpl)
 
-ggsave("Output/Figures/unweightedDiffMeans.png", unweighted, height = 6, width = 9)
+ggsave("Output/Figures/unweightedDiffMeans.png", unweighted, height = 7, width = 8)
