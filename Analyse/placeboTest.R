@@ -63,7 +63,7 @@ placeboBirth <- ggplot(reg, aes(x = eventT)) +
   scale_x_continuous(breaks = seq(-11, -1, 1), labels = seq(-11, -1, 1)) + 
   scale_y_continuous(breaks = seq(-0.015, 0.015, 0.005), labels = seq(-0.015, 0.015, 0.005)) + 
   geom_hline(yintercept = 0) + 
-  ylab("Estimate and 95% confidence interval") + 
+  ylab("Estimate and 95% \n confidence interval") + 
   xlab("Time to treatment") +
   theme_bw() +
   theme(legend.position = "bottom",
@@ -72,7 +72,7 @@ placeboBirth <- ggplot(reg, aes(x = eventT)) +
         panel.grid.minor.y = element_blank(),
         legend.title = element_blank())
 
-ggsave("Output/Figures/placeboBirth.png", placeboBirth, height = 3, width = 5)
+#ggsave("Output/Figures/placeboBirth.png", placeboBirth, height = 3, width = 5)
 
 # Placebo for employment -------------------------------------------------------
 df <- read_csv("Data/Clean/mergedEmployment.csv")
@@ -128,7 +128,7 @@ placeboEmpl <- ggplot(reg, aes(x = eventT)) +
   scale_x_continuous(breaks = seq(-11, -1, 1), labels = seq(-11, -1, 1)) + 
   scale_y_continuous(breaks = seq(-0.05, 0.04, 0.01), labels = seq(-0.05, 0.04, 0.01)) + 
   geom_hline(yintercept = 0) + 
-  ylab("Estimate and 95% confidence interval") + 
+  ylab("Estimate and 95% \n confidence interval") + 
   xlab("Time to treatment") +
   theme_bw() +
   theme(legend.position = "bottom",
@@ -137,7 +137,7 @@ placeboEmpl <- ggplot(reg, aes(x = eventT)) +
         panel.grid.minor.y = element_blank(),
         legend.title = element_blank())
 
-ggsave("Output/Figures/placeboEmpl.png", placeboEmpl, height = 3, width = 5)
+#ggsave("Output/Figures/placeboEmpl.png", placeboEmpl, height = 3, width = 5)
 
 placeboBirth <- placeboBirth + 
   ggtitle("A: Probability of birth")
@@ -145,9 +145,9 @@ placeboBirth <- placeboBirth +
 placeboEmpl <- placeboEmpl + 
   ggtitle("B: Probability of employment")
 
-placebo <- placeboBirth + placeboEmpl
+placebo <- placeboBirth/placeboEmpl
 
-ggsave("Output/Figures/placeboTest.png", placebo, height = 4, width = 8)
+ggsave("Output/Figures/placeboTest.png", placebo, height = 5, width = 5)
 
 
 # Regression table --------------------------------------------------------

@@ -209,7 +209,7 @@ sunab <- cbind(coef, se, type, eventT) %>%
 
 coef <- c(twfeDDBirth$coeftable[1:17], 0)
 se <- c(twfeDDBirth$coeftable[1:17,2], NA)
-type <- rep("TWFEDD Estimate", 18)
+type <- rep("TWFE Estimate", 18)
 
 twfedd <- cbind(coef, se, type, eventT) %>% 
   as.data.frame()
@@ -251,7 +251,7 @@ sunab <- cbind(coef, se, type, eventT) %>%
 
 coef <- c(twfeDDEmpl$coeftable[1:17], 0)
 se <- c(twfeDDEmpl$coeftable[1:17,2], NA)
-type <- rep("TWFEDD Estimate", 18)
+type <- rep("TWFE Estimate", 18)
 
 twfedd <- cbind(coef, se, type, eventT) %>% 
   as.data.frame()
@@ -292,7 +292,7 @@ sunab <- cbind(coef, se, type, eventT) %>%
 
 coef <- c(twfeddAhrsworkt$coeftable[1:13], 0)
 se <- c(twfeddAhrsworkt$coeftable[1:13,2], NA)
-type <- rep("TWFEDD Estimate", 14)
+type <- rep("TWFE Estimate", 14)
 
 twfedd <- cbind(coef, se, type, eventT) %>% 
   as.data.frame()
@@ -326,6 +326,6 @@ eventAhrsworkt <- ggplot(eventStudy, aes(x = eventT, group = type, colour = type
 
 events2 <- eventBirth / eventEmpl
 
-ggsave("Output/Figures/eventStudyBE.png", events2, height = 7, width = 6)
+ggsave("Output/Figures/eventStudyBE.png", events2, height = 5, width = 5)
 
-ggsave("Output/Figures/eventStudyAhrs.png", eventAhrsworkt, height = 4, width = 6)
+ggsave("Output/Figures/eventStudyAhrs.png", eventAhrsworkt, height = 2.5, width = 5)

@@ -64,11 +64,11 @@ meanBirth <- ggplot(means, aes(x = YEAR, y = mean, group = TREAT, colour = TREAT
   scale_x_continuous(breaks = seq(1982, 2010, 4), labels = seq(1982, 2010, 4)) +
   scale_y_continuous(breaks = seq(15,60,5), labels = seq(15,60,5)) +
   theme_bw() +
-  theme(legend.position = "bottom",
+  theme(legend.position = "none",
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank())
-  
+
 
 # Unweighted diff means for employment ------------------------------------
 df <- read_csv("Data/Clean/mergedEmployment.csv")
@@ -126,7 +126,7 @@ meanEmpl <- ggplot(means, aes(x = YEAR, y = mean, group = TREAT, colour = TREAT)
   geom_line() +
   scale_colour_manual(values = c("red", "blue")) +
   geom_vline(xintercept = 1992, colour = "grey", linetype = "longdash") +
-  labs(x = "Year", y = "Average employment rate", colour = "", title = "B: Employment rate") +
+  labs(x = "Year", y = "Average employment rate", colour = "", title = "B: Employment rates") +
   scale_x_continuous(breaks = seq(1982, 2010, 4), labels = seq(1982, 2010, 4)) +
   scale_y_continuous(breaks = seq(50,70,2), labels = seq(50,70,2)) +
   theme_bw() +
@@ -135,9 +135,6 @@ meanEmpl <- ggplot(means, aes(x = YEAR, y = mean, group = TREAT, colour = TREAT)
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank())
 
+unweighted <- (meanBirth + diffBirth) / (meanEmpl + diffEmpl)
 
-
-
-unweighted <- (meanBirth + meanEmpl) / (diffBirth + diffEmpl)
-
-ggsave("Output/Figures/unweightedDiffMeans.png", unweighted, height = 7, width = 8)
+ggsave("Output/Figures/unweightedDiffMeans.png", unweighted, height = 7, width = 8, units = "in")
